@@ -1,1 +1,137 @@
+# Configuración avanzada para i3wm
+# Autor: Corsario-CL  https://linktree.cryon.cl/ 
+# Definir la mod key (super es la tecla por defecto)
+set $mod Mod4
+
+# Definir el fondo de pantalla
+exec --no-startup-id feh --bg-scale /home/corsario/Documentos/Wallpapers/1.png
+exec --no-startup-id nitrogen --restore
+exec --no-startup-id compton --config $HOME/.config/compton.conf
+
+# Apariencia y fuentes
+font pango:DejaVu Sans Mono 10
+new_window pixel 1
+new_float 50 50 800 600
+
+# Paleta de colores (usa tonos oscuros y vivos)
+set $bg-color #1e1e2e
+set $inactive-bg #2d2f3f
+set $focused-bg #3f4454
+set $border-color #ffffff
+set $focus-color #ff79c6
+set $urgent-color #ff5555
+set $text-color #f8f8f2
+set $highlight-color #50fa7b
+
+# Ventanas y bordes
+client.focused $focused-bg $focus-color $border-color $focus-color
+client.unfocused $inactive-bg $border-color $border-color $inactive-bg
+client.focused_inactive $inactive-bg $border-color $border-color $inactive-bg
+client.urgent $bg-color $urgent-color $text-color $urgent-color
+
+# Barra de estado con i3status
+bar {
+    position top
+    status_command i3status
+    font pango:Monospace 10
+    colors {
+        background $bg-color
+        statusline $text-color
+        separator $border-color
+        focused_workspace $focus-color $bg-color $bg-color
+        active_workspace $highlight-color $bg-color $bg-color
+        inactive_workspace $inactive-bg $border-color $border-color
+        urgent_workspace $urgent-color $text-color $bg-color
+    }
+    tray_output primary
+}
+
+# Funciones avanzadas
+exec --no-startup-id picom --config $HOME/.config/picom.conf   # Animaciones de ventanas
+exec --no-startup-id redshift -O 4500K                      # Ajuste automático de la temperatura del color
+
+# Agregar aplicaciones al inicio
+exec --no-startup-id gnome-keyring-daemon --start
+exec --no-startup-id nm-applet                              # Conexión Wi-Fi
+exec --no-startup-id volumeicon                             # Icono de volumen
+
+# Ajustes del tamaño de las ventanas
+for_window [class="^.*"] border pixel 2
+
+# Definir espacios de trabajo (workspaces)
+set $ws1 " Terminal"
+set $ws2 " Navegador"
+set $ws3 " Editor"
+set $ws4 " Música"
+set $ws5 "📑 Documentos"
+set $ws6 "🖥 Desarrollo"
+set $ws7 "💻 Video"
+set $ws8 "🌐 Red"
+
+# Asignar teclas para cambiar entre espacios de trabajo
+bindsym $mod+1 workspace $ws1
+bindsym $mod+2 workspace $ws2
+bindsym $mod+3 workspace $ws3
+bindsym $mod+4 workspace $ws4
+bindsym $mod+5 workspace $ws5
+bindsym $mod+6 workspace $ws6
+bindsym $mod+7 workspace $ws7
+bindsym $mod+8 workspace $ws8
+
+# Lanzar aplicaciones desde atajos
+bindsym $mod+Return exec gnome-terminal
+bindsym $mod+w exec firefox
+bindsym $mod+e exec nautilus
+bindsym $mod+f exec code
+bindsym $mod+Shift+c exec gimp
+bindsym $mod+Shift+v exec vlc
+bindsym $mod+d exec rofi -show drun            # Usar rofi para lanzar aplicaciones
+
+# Comando para abrir un terminal con un fondo transparente
+bindsym $mod+Shift+Return exec gnome-terminal --geometry=80x24 --background-color=#1e1e2e --foreground-color=#f8f8f2
+
+# Funcionalidades adicionales
+bindsym $mod+Shift+q kill                          # Cerrar ventana activa
+bindsym $mod+Shift+e exec --no-startup-id xlock   # Bloquear pantalla
+bindsym $mod+h focus left                          # Mover foco a la ventana izquierda
+bindsym $mod+j focus down                          # Mover foco a la ventana de abajo
+bindsym $mod+k focus up                            # Mover foco a la ventana de arriba
+bindsym $mod+l focus right                         # Mover foco a la ventana derecha
+
+# Atajos de aplicación de medios
+bindsym $mod+Up exec amixer -D pulse sset Master 5%+   # Subir volumen
+bindsym $mod+Down exec amixer -D pulse sset Master 5%-  # Bajar volumen
+bindsym $mod+m exec amixer -D pulse sset Master toggle  # Mute
+
+# Configuración de animaciones para ventanas flotantes
+floating_modifier $mod
+for_window [class="^.*"] floating enable
+for_window [title="^.*"] float enable
+
+# Manejo de ventanas divididas y flotantes
+bindsym $mod+Shift+f fullscreen toggle    # Alternar pantalla completa
+bindsym $mod+v split vertical             # Split vertical
+bindsym $mod+h split horizontal           # Split horizontal
+
+# Gestión de ventanas apiladas
+bindsym $mod+Shift+s stack                 # Apilar ventanas
+bindsym $mod+Shift+d unstack               # Desapilar ventanas
+
+# Cambiar entre ventanas apiladas
+bindsym $mod+Tab focus right               # Cambiar a ventana derecha
+bindsym $mod+Shift+Tab focus left          # Cambiar a ventana izquierda
+
+# Función para configurar el brillo de la pantalla (requiere xbacklight)
+bindsym $mod+F5 exec xbacklight -dec 10    # Bajar brillo
+bindsym $mod+F6 exec xbacklight -inc 10    # Subir brillo
+
+# Personalización del comportamiento de las ventanas
+assign [class="Gimp"] $ws3                 # Asignar Gimp al espacio de trabajo 3
+assign [class="Firefox"] $ws2              # Asignar Firefox al espacio de trabajo 2
+
+# Aplicaciones adicionales al inicio
+exec --no-startup-id conky -c $HOME/.config/conky/conky.conf  # Conky para información del sistema
+
+# Activar los bordes redondeados para las ventanas (si la configuración de picom lo permite)
+exec --no-startup-id picom --config ~/.config/picom/picom.conf  # Configuración avanzada de compton/picom
 
